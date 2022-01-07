@@ -40,7 +40,11 @@ module.exports = function (app) {
       let events = eventsString.split(',').map(s => s.trim())
       app.debug('Using events %j', events)
       events.forEach(name => {
-        app.on(name, send)
+        if (name == 'nmea0183') {
+          app.signalk.on(name, send)
+        } else {
+          app.on(name, send)
+        }
       })
       app.setPluginStatus(`Emitting AIS messages to ${endpointList.join(', ')}`)
     },
